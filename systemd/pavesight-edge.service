@@ -1,0 +1,15 @@
+[Unit]
+Description=PaveSight edge detection pipeline
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/pavesight-edge
+ExecStart=/usr/bin/python3 -m edge.main
+Restart=on-failure
+RestartSec=5
+User=pi
+
+[Install]
+WantedBy=multi-user.target
