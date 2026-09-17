@@ -1,0 +1,24 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+node_modules/
+dist/
+*.tsbuildinfo
+frontend/vite.config.js
+frontend/vite.config.d.ts
+
+.env
+backend/.env
+frontend/.env
+
+backend/media/*
+!backend/media/.gitkeep
+
+# Trained model weights are a build artifact (tens of MB), not source - see
+# ../training/ to reproduce, or copy an existing best.pt into this path.
+backend/app/ml/*.pt
+
+.DS_Store
