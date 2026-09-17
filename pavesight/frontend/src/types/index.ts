@@ -78,6 +78,8 @@ export interface StatsResponse {
   by_status: Record<string, number>;
 }
 
+export type DepthLabel = "shallow" | "moderate" | "deep" | "unknown";
+
 export interface InferenceDetectionBox {
   class_name: string;
   confidence: number;
@@ -87,6 +89,8 @@ export interface InferenceDetectionBox {
   x2: number;
   y2: number;
   area_fraction: number;
+  relative_depth_score: number;
+  depth_label: DepthLabel;
 }
 
 export interface InferenceResponse {

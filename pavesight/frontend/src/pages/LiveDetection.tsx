@@ -2,7 +2,7 @@ import { Camera, ImageUp, Loader2, MapPin, Video as VideoIcon } from "lucide-rea
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { api, ApiError } from "../api/client";
-import { TierBadge } from "../components/StatusBadge";
+import { DepthBadge, TierBadge } from "../components/StatusBadge";
 import Card from "../components/ui/Card";
 import PageHeader from "../components/ui/PageHeader";
 import { defectLabel, getTier, TIER_COLORS } from "../lib/severity";
@@ -226,19 +226,30 @@ export default function LiveDetection() {
 
           {tab === "camera" && (
             <div
-              className="flex max-h-96 w-full flex-col items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-900"
+              className="relative flex max-h-96 w-full flex-col items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-900"
               style={{ aspectRatio: imageDataUrl && !cameraActive ? aspectRatio : "16 / 10" }}
             >
-              {imageDataUrl && !cameraActive ? (
-                <DetectionCanvas
-                  src={imageDataUrl}
-                  detections={detections}
-                  detecting={detecting}
-                  frameDims={frameDims}
-                />
-              ) : cameraActive ? (
-                <video ref={videoRef} muted playsInline className="h-full w-full object-cover" />
-              ) : (
+              {/* Always mounted (never conditionally rendered) so videoRef.current
+                  is already valid the moment startCamera() tries to attach the
+                  stream - visibility is toggled instead of mount/unmount. */}
+              <video
+                ref={videoRef}
+                muted
+                playsInline
+                className="h-full w-full object-cover"
+                hidden={!cameraActive}
+              />
+              {imageDataUrl && !cameraActive && (
+                <div className="absolute inset-0">
+                  <DetectionCanvas
+                    src={imageDataUrl}
+                    detections={detections}
+                    detecting={detecting}
+                    frameDims={frameDims}
+                  />
+                </div>
+              )}
+              {!cameraActive && !imageDataUrl && (
                 <div className="text-center text-sm text-slate-300">
                   <Camera size={28} className="mx-auto mb-2" />
                   {cameraError ?? "Camera is off"}
@@ -378,6 +389,10 @@ export default function LiveDetection() {
                 value={`${location.lon.toFixed(4)}° ${location.lon >= 0 ? "E" : "W"}`}
               />
               <DetailRow label="Frame Coverage" value={`${(top.area_fraction * 100).toFixed(1)}%`} />
+              <DetailRow label="Estimated Depth" value={<DepthBadge label={top.depth_label} />} />
+              <p className="text-[11px] text-slate-400">
+                Depth is a relative shadow-based estimate, not a physical measurement.
+              </p>
               {detections && detections.length > 1 && (
                 <p className="text-[11px] text-slate-400">
                   +{detections.length - 1} more defect{detections.length - 1 === 1 ? "" : "s"}{" "}

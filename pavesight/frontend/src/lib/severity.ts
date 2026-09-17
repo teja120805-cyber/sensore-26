@@ -1,4 +1,4 @@
-import type { Detection, DetectionStatus, Severity } from "../types";
+import type { DepthLabel, Detection, DetectionStatus, Severity } from "../types";
 
 // The backend only knows 3 severity levels. "Critical" is a purely
 // presentational escalation of `high` severity detections above a confidence
@@ -39,6 +39,13 @@ export const STATUS_BADGE_CLASSES: Record<DetectionStatus, string> = {
   repaired: "bg-green-100 text-green-700 border-green-200",
 };
 
+export const DEPTH_BADGE_CLASSES: Record<DepthLabel, string> = {
+  shallow: "bg-green-100 text-green-700 border-green-200",
+  moderate: "bg-amber-100 text-amber-700 border-amber-200",
+  deep: "bg-red-100 text-red-700 border-red-200",
+  unknown: "bg-slate-100 text-slate-500 border-slate-200",
+};
+
 export const HEATMAP_GRADIENT: Record<number, string> = {
   0.2: TIER_COLORS.low,
   0.5: TIER_COLORS.medium,
@@ -57,6 +64,10 @@ export function getTier(d: Pick<Detection, "severity" | "confidence">): Tier {
 
 export function tierLabel(tier: Tier): string {
   return tier.charAt(0).toUpperCase() + tier.slice(1);
+}
+
+export function depthLabelText(label: DepthLabel): string {
+  return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
 export function defectLabel(defectClass: string): string {

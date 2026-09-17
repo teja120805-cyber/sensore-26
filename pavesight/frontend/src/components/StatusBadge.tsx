@@ -1,5 +1,7 @@
-import type { DetectionStatus, Severity } from "../types";
+import type { DepthLabel, DetectionStatus, Severity } from "../types";
 import {
+  DEPTH_BADGE_CLASSES,
+  depthLabelText,
   SEVERITY_BADGE_CLASSES,
   STATUS_BADGE_CLASSES,
   TIER_BADGE_CLASSES,
@@ -23,6 +25,16 @@ export function TierBadge({ tier }: { tier: Tier }) {
       className={`inline-block whitespace-nowrap rounded-full border px-2 py-0.5 text-xs font-medium ${TIER_BADGE_CLASSES[tier]}`}
     >
       {tierLabel(tier)}
+    </span>
+  );
+}
+
+export function DepthBadge({ label }: { label: DepthLabel }) {
+  return (
+    <span
+      className={`inline-block whitespace-nowrap rounded-full border px-2 py-0.5 text-xs font-medium ${DEPTH_BADGE_CLASSES[label]}`}
+    >
+      {depthLabelText(label)}
     </span>
   );
 }
